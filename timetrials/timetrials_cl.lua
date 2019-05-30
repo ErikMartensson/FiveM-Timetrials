@@ -215,6 +215,23 @@ AddEventHandler("raceRaceActive", function()
                 break
             end
 
+            -- Respawn at last checkpoint when H is pressed
+            if IsControlJustReleased(0, 74) and GetLastInputMethod(0) then
+                local x, y, z, heading
+                if (raceState.cP == 1) then
+                    x = race.start.x
+                    y = race.start.y
+                    z = race.start.z
+                    heading = race.start.heading
+                else
+                    x = race.checkpoints[raceState.cP - 1].x
+                    y = race.checkpoints[raceState.cP - 1].y
+                    z = race.checkpoints[raceState.cP - 1].z
+                    heading = race.checkpoints[raceState.cP - 1].heading
+                end
+                teleportToCoord(x, y, z + 4.0, heading)
+            end
+
             -- Draw checkpoint and time HUD above minimap
             local checkpointDist = math.floor(GetDistanceBetweenCoords(race.checkpoints[raceState.cP].x,  race.checkpoints[raceState.cP].y,  race.checkpoints[raceState.cP].z, GetEntityCoords(GetPlayerPed(-1))))
             DrawHudText(("%.3fs"):format((GetGameTimer() - raceState.startTime)/1000), RACING_HUD_COLOR, 0.015, 0.725, 0.7, 0.7)
